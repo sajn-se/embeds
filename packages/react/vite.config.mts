@@ -7,7 +7,7 @@ export default defineConfig({
     build: {
         lib: {
             entry: './src/index.ts',
-            name: '@documenso/embed-react',
+            name: '@sajn/embed-react',
             formats: ['es', 'cjs'],
             fileName: 'index',
         },

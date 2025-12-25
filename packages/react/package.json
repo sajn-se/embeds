@@ -1,7 +1,7 @@
 {
     "name": "@sajn/embed-react",
     "version": "0.1.0",
-    "description": "",
+    "description": "React component for embedding sajn e-signature functionality",
     "homepage": "https://github.com/sajn-se/embeds#readme",
     "bugs": {
         "url": "https://github.com/sajn-se/embeds/issues"
@@ -33,7 +33,7 @@
     ],
     "scripts": {
         "build": "vite build",
-        "clean": "rimraf node_modules && rimraf src",
+        "clean": "rimraf node_modules && rimraf dist",
         "check-exports": "attw --pack .",
         "publint": "publint"
     },

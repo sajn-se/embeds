@@ -2,16 +2,18 @@
 
 set -e
 
-SCRIPT_DIR="$(readlink -f "$(dirname "$0")")"
-MONOREPO_ROOT="$(readlink -f "$SCRIPT_DIR/../")"
+SCRIPT_DIR="$(dirname "$0")"
+MONOREPO_ROOT="$SCRIPT_DIR/.."
 
-pushd "$MONOREPO_ROOT" > /dev/null
+cd "$MONOREPO_ROOT"
 
-trap "popd > /dev/null" EXIT
-trap "popd > /dev/null" ERR
+echo "Building @sajn/embed..."
+pnpm --filter @sajn/embed run build
 
-npm run build -w @sajn/embed
+echo "Building @sajn/embed-react..."
+pnpm --filter @sajn/embed-react run build
 
-npm run build -w @sajn/embed-react
+echo "Building @sajn/embed-vue..."
+pnpm --filter @sajn/embed-vue run build
 
-npm run format
+echo "Done!"
