@@ -15,13 +15,13 @@ export type EmbedSignDocumentProps = {
 
     additionalProps?: Record<string, string | number | boolean> | undefined;
     onDocumentReady?: () => void;
-    onDocumentCompleted?: (data: {
+    onSignerCompleted?: (data: {
         token: string;
         documentId: number;
         recipientId: number;
     }) => void;
     onDocumentError?: (error: string) => void;
-    onDocumentRejected?: (data: {
+    onSignerRejected?: (data: {
         token: string;
         documentId: number;
         recipientId: number;
@@ -58,7 +58,7 @@ function EmbedSignDocument(props: EmbedSignDocumentProps) {
                     break;
 
                 case "document-completed":
-                    props.onDocumentCompleted?.(event.data.data);
+                    props.onSignerCompleted?.(event.data.data);
                     break;
 
                 case "document-error":
@@ -66,7 +66,7 @@ function EmbedSignDocument(props: EmbedSignDocumentProps) {
                     break;
 
                 case "document-rejected":
-                    props.onDocumentRejected?.(event.data.data);
+                    props.onSignerRejected?.(event.data.data);
                     break;
             }
         }

@@ -4,7 +4,7 @@ Embed sajn's e-signature functionality directly into your applications.
 
 ## Overview
 
-sajn Embed provides framework-specific components for embedding document signing. Pass a `documentId` and `token` (obtained from the sajn API) to render a signing UI, then handle lifecycle events like `onDocumentCompleted` and `onDocumentRejected`.
+sajn Embed provides framework-specific components for embedding document signing. Pass a `documentId` and `token` (obtained from the sajn API) to render a signing UI, then handle lifecycle events like `onSignerCompleted` and `onSignerRejected`.
 
 ## Frameworks
 
