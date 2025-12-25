@@ -1,0 +1,54 @@
+{
+    "name": "@sajn/embed-react",
+    "version": "0.1.0",
+    "description": "",
+    "homepage": "https://github.com/sajn-se/embeds#readme",
+    "bugs": {
+        "url": "https://github.com/sajn-se/embeds/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sajn-se/embeds.git"
+    },
+    "license": "MIT",
+    "author": "sajn",
+    "type": "commonjs",
+    "exports": {
+        "./package.json": "./package.json",
+        ".": {
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            },
+            "require": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            }
+        }
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "vite build",
+        "clean": "rimraf node_modules && rimraf src",
+        "check-exports": "attw --pack .",
+        "publint": "publint"
+    },
+    "devDependencies": {
+        "@types/react": "^18.0.0 || ^19.0.0",
+        "@vitejs/plugin-react": "^5.0.0",
+        "vite": "^7.0.0",
+        "vite-plugin-dts": "^4.1.0"
+    },
+    "peerDependencies": {
+        "react": "^18.0.0 || ^19.0.0",
+        "react-dom": "^18.0.0 || ^19.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "module": "dist/index.mjs"
+}
