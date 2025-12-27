@@ -19,6 +19,7 @@ export type EmbedSignDocumentProps = {
         token: string;
         documentId: number;
         recipientId: number;
+        failed?: string;
     }) => void;
     onDocumentError?: (error: string) => void;
     onSignerRejected?: (data: {

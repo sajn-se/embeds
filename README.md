@@ -85,8 +85,8 @@ function handleComplete(data) {
 | Event | Description |
 |-------|-------------|
 | `documentReady` | Iframe has loaded and is ready |
-| `signerCompleted` | Signer has completed signing |
-| `signerRejected` | Signer has rejected the document |
+| `signerCompleted` | Signer has completed signing. Data includes `token`, `documentId`, `recipientId`, and optionally `failed` (failure reason if signing failed) |
+| `signerRejected` | Signer has rejected the document. Data includes `token`, `documentId`, `recipientId`, and `reason` |
 | `documentError` | An error occurred |
 
 ## Getting Help

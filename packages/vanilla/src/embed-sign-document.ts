@@ -4,6 +4,7 @@ export interface SignerCompletedData {
     token: string;
     documentId: number;
     recipientId: number;
+    failed?: string;
 }
 
 export interface SignerRejectedData {
