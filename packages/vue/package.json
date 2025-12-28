@@ -1,6 +1,6 @@
 {
     "name": "@sajn/embed-vue",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Vue component for embedding sajn e-signature functionality",
     "homepage": "https://github.com/sajn-se/embeds#readme",
     "bugs": {
