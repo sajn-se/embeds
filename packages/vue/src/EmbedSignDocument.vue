@@ -5,14 +5,14 @@ import type { CssVars } from './css-vars';
 export interface SignerCompletedData {
     token: string;
     documentId: number;
-    recipientId: number;
+    signerId: number;
     failed?: string;
 }
 
 export interface SignerRejectedData {
     token: string;
     documentId: number;
-    recipientId: number;
+    signerId: number;
     reason: string;
 }
 
@@ -61,13 +61,13 @@ function handleMessage(event: MessageEvent) {
             case 'document-ready':
                 emit('documentReady');
                 break;
-            case 'document-completed':
+            case 'signer-completed':
                 emit('signerCompleted', event.data.data);
                 break;
             case 'document-error':
                 emit('documentError', event.data.data);
                 break;
-            case 'document-rejected':
+            case 'signer-rejected':
                 emit('signerRejected', event.data.data);
                 break;
         }

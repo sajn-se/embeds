@@ -3,14 +3,14 @@ import type { CssVars } from './css-vars';
 export interface SignerCompletedData {
     token: string;
     documentId: number;
-    recipientId: number;
+    signerId: number;
     failed?: string;
 }
 
 export interface SignerRejectedData {
     token: string;
     documentId: number;
-    recipientId: number;
+    signerId: number;
     reason: string;
 }
 
@@ -108,13 +108,13 @@ export function embedSignDocument(options: EmbedSignDocumentOptions): EmbedSignD
                 case 'document-ready':
                     onDocumentReady?.();
                     break;
-                case 'document-completed':
+                case 'signer-completed':
                     onSignerCompleted?.(event.data.data);
                     break;
                 case 'document-error':
                     onDocumentError?.(event.data.data);
                     break;
-                case 'document-rejected':
+                case 'signer-rejected':
                     onSignerRejected?.(event.data.data);
                     break;
             }

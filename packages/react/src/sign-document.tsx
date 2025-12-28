@@ -18,14 +18,14 @@ export type EmbedSignDocumentProps = {
     onSignerCompleted?: (data: {
         token: string;
         documentId: number;
-        recipientId: number;
+        signerId: number;
         failed?: string;
     }) => void;
     onDocumentError?: (error: string) => void;
     onSignerRejected?: (data: {
         token: string;
         documentId: number;
-        recipientId: number;
+        signerId: number;
         reason: string;
     }) => void;
 };
@@ -58,7 +58,7 @@ function EmbedSignDocument(props: EmbedSignDocumentProps) {
                     props.onDocumentReady?.();
                     break;
 
-                case "document-completed":
+                case "signer-completed":
                     props.onSignerCompleted?.(event.data.data);
                     break;
 
@@ -66,7 +66,7 @@ function EmbedSignDocument(props: EmbedSignDocumentProps) {
                     props.onDocumentError?.(event.data.data);
                     break;
 
-                case "document-rejected":
+                case "signer-rejected":
                     props.onSignerRejected?.(event.data.data);
                     break;
             }
