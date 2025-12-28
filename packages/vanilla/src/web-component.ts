@@ -5,7 +5,7 @@ export class SajnSignDocument extends HTMLElement {
     private container: HTMLDivElement;
 
     static get observedAttributes() {
-        return ['document-id', 'token', 'host', 'class-name', 'name', 'allow-document-rejection'];
+        return ['document-id', 'token', 'host', 'class-name', 'allow-document-rejection'];
     }
 
     constructor() {
@@ -46,7 +46,6 @@ export class SajnSignDocument extends HTMLElement {
             token,
             host: this.getAttribute('host') || undefined,
             className: this.getAttribute('class-name') || undefined,
-            name: this.getAttribute('name') || undefined,
             allowDocumentRejection: this.hasAttribute('allow-document-rejection'),
             onDocumentReady: () => {
                 this.dispatchEvent(new CustomEvent('document-ready'));

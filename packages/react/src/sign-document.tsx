@@ -8,9 +8,7 @@ export type EmbedSignDocumentProps = {
     token: string;
     documentId: string;
 
-    css?: string | undefined;
     cssVars?: (CssVars & Record<string, string>) | undefined;
-    name?: string | undefined;
     allowDocumentRejection?: boolean | undefined;
 
     additionalProps?: Record<string, string | number | boolean> | undefined;
@@ -39,8 +37,6 @@ function EmbedSignDocument(props: EmbedSignDocumentProps) {
         const encodedOptions = btoa(
             encodeURIComponent(
                 JSON.stringify({
-                    name: props.name,
-                    css: props.css,
                     cssVars: props.cssVars,
                     allowDocumentRejection: props.allowDocumentRejection,
                     ...props.additionalProps,

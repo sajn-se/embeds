@@ -25,12 +25,8 @@ export interface EmbedSignDocumentOptions {
     host?: string;
     /** CSS class for the iframe */
     className?: string;
-    /** Custom CSS to inject */
-    css?: string;
     /** CSS variables for theming */
     cssVars?: CssVars & Record<string, string>;
-    /** Signer name */
-    name?: string;
     /** Allow document rejection */
     allowDocumentRejection?: boolean;
     /** Additional props to pass */
@@ -59,9 +55,7 @@ export function embedSignDocument(options: EmbedSignDocumentOptions): EmbedSignD
         token,
         host = 'https://app.sajn.se',
         className,
-        css,
         cssVars,
-        name,
         allowDocumentRejection,
         additionalProps,
         onDocumentReady,
@@ -83,8 +77,6 @@ export function embedSignDocument(options: EmbedSignDocumentOptions): EmbedSignD
     const encodedOptions = btoa(
         encodeURIComponent(
             JSON.stringify({
-                name,
-                css,
                 cssVars,
                 allowDocumentRejection,
                 ...additionalProps,

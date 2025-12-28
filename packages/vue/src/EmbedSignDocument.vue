@@ -21,9 +21,7 @@ const props = withDefaults(defineProps<{
     token: string;
     host?: string;
     class?: string;
-    css?: string;
     cssVars?: CssVars & Record<string, string>;
-    name?: string;
     allowDocumentRejection?: boolean;
     additionalProps?: Record<string, string | number | boolean>;
 }>(), {
@@ -43,8 +41,6 @@ const src = computed(() => {
     const encodedOptions = btoa(
         encodeURIComponent(
             JSON.stringify({
-                name: props.name,
-                css: props.css,
                 cssVars: props.cssVars,
                 allowDocumentRejection: props.allowDocumentRejection,
                 ...props.additionalProps,
