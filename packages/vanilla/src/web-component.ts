@@ -54,8 +54,8 @@ export class SajnSignDocument extends HTMLElement {
             onSignerCompleted: (data: SignerCompletedData) => {
                 this.dispatchEvent(new CustomEvent('signer-completed', { detail: data }));
             },
-            onDocumentError: (error: string) => {
-                this.dispatchEvent(new CustomEvent('document-error', { detail: error }));
+            onDocumentError: (data: { code: string; message: string }) => {
+                this.dispatchEvent(new CustomEvent('document-error', { detail: data }));
             },
             onSignerRejected: (data: SignerRejectedData) => {
                 this.dispatchEvent(new CustomEvent('signer-rejected', { detail: data }));

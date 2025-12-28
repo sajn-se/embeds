@@ -40,7 +40,7 @@ export interface EmbedSignDocumentOptions {
     /** Called when signer completes signing */
     onSignerCompleted?: (data: SignerCompletedData) => void;
     /** Called on error */
-    onDocumentError?: (error: string) => void;
+    onDocumentError?: (data: { code: string; message: string }) => void;
     /** Called when signer rejects */
     onSignerRejected?: (data: SignerRejectedData) => void;
 }

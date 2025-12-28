@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{
     documentReady: [];
     signerCompleted: [data: SignerCompletedData];
-    documentError: [error: string];
+    documentError: [data: { code: string; message: string }];
     signerRejected: [data: SignerRejectedData];
 }>();
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 
 export type EmbedSignDocumentProps = {
     className?: string;
@@ -21,7 +21,7 @@ export type EmbedSignDocumentProps = {
         signerId: number;
         failed?: string;
     }) => void;
-    onDocumentError?: (error: string) => void;
+    onDocumentError?: (data: { code: string; message: string }) => void;
     onSignerRejected?: (data: {
         token: string;
         documentId: number;
@@ -51,37 +51,37 @@ function EmbedSignDocument(props: EmbedSignDocumentProps) {
         return `${srcUrl}#${encodedOptions}`;
     }
 
-    function handleMessage(event: MessageEvent) {
-        if (__iframe.current?.contentWindow === event.source) {
-            switch (event.data.action) {
-                case "document-ready":
-                    props.onDocumentReady?.();
-                    break;
+    const handleMessage = useCallback(
+        (event: MessageEvent) => {
+            if (__iframe.current?.contentWindow === event.source) {
+                switch (event.data.action) {
+                    case "document-ready":
+                        props.onDocumentReady?.();
+                        break;
 
-                case "signer-completed":
-                    props.onSignerCompleted?.(event.data.data);
-                    break;
+                    case "signer-completed":
+                        props.onSignerCompleted?.(event.data.data);
+                        break;
 
-                case "document-error":
-                    props.onDocumentError?.(event.data.data);
-                    break;
+                    case "document-error":
+                        props.onDocumentError?.(event.data.data);
+                        break;
 
-                case "signer-rejected":
-                    props.onSignerRejected?.(event.data.data);
-                    break;
+                    case "signer-rejected":
+                        props.onSignerRejected?.(event.data.data);
+                        break;
+                }
             }
-        }
-    }
+        },
+        [props.onDocumentReady, props.onSignerCompleted, props.onDocumentError, props.onSignerRejected]
+    );
 
     useEffect(() => {
         window.addEventListener("message", handleMessage);
-    }, []);
-
-    useEffect(() => {
         return () => {
             window.removeEventListener("message", handleMessage);
         };
-    }, []);
+    }, [handleMessage]);
 
     return <iframe ref={__iframe} className={props.className} src={src()} />;
 }
