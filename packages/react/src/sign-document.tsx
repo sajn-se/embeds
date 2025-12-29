@@ -2,7 +2,10 @@
 
 import { useRef, useEffect, useCallback } from "react";
 
+export type Language = 'sv' | 'en' | 'no' | 'da' | 'fi' | 'de' | 'is' | 'es' | 'fr' | 'it';
+
 export type EmbedSignDocumentProps = {
+    language?: Language;
     className?: string;
     host?: string;
     token: string;
@@ -37,6 +40,7 @@ function EmbedSignDocument(props: EmbedSignDocumentProps) {
         const encodedOptions = btoa(
             encodeURIComponent(
                 JSON.stringify({
+                    language: props.language ?? 'en',
                     cssVars: props.cssVars,
                     allowDocumentRejection: props.allowDocumentRejection,
                     ...props.additionalProps,

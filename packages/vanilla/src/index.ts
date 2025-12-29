@@ -5,6 +5,7 @@ export type {
     EmbedSignDocumentInstance,
     SignerCompletedData,
     SignerRejectedData,
+    Language,
 } from './embed-sign-document';
 export type { CssVars } from './css-vars';
 export { SajnSignDocument } from './web-component';

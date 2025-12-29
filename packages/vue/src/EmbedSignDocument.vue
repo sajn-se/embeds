@@ -2,6 +2,8 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import type { CssVars } from './css-vars';
 
+export type Language = 'sv' | 'en' | 'no' | 'da' | 'fi' | 'de' | 'is' | 'es' | 'fr' | 'it';
+
 export interface SignerCompletedData {
     token: string;
     documentId: number;
@@ -20,12 +22,14 @@ const props = withDefaults(defineProps<{
     documentId: string;
     token: string;
     host?: string;
+    language?: Language;
     class?: string;
     cssVars?: CssVars & Record<string, string>;
     allowDocumentRejection?: boolean;
     additionalProps?: Record<string, string | number | boolean>;
 }>(), {
     host: 'https://app.sajn.se',
+    language: 'en',
 });
 
 const emit = defineEmits<{
@@ -41,6 +45,7 @@ const src = computed(() => {
     const encodedOptions = btoa(
         encodeURIComponent(
             JSON.stringify({
+                language: props.language,
                 cssVars: props.cssVars,
                 allowDocumentRejection: props.allowDocumentRejection,
                 ...props.additionalProps,

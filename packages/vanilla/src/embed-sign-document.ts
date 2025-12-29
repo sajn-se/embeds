@@ -1,5 +1,7 @@
 import type { CssVars } from './css-vars';
 
+export type Language = 'sv' | 'en' | 'no' | 'da' | 'fi' | 'de' | 'is' | 'es' | 'fr' | 'it';
+
 export interface SignerCompletedData {
     token: string;
     documentId: number;
@@ -23,6 +25,8 @@ export interface EmbedSignDocumentOptions {
     token: string;
     /** Custom host (default: https://app.sajn.se) */
     host?: string;
+    /** Language for the embed UI (default: 'en') */
+    language?: Language;
     /** CSS class for the iframe */
     className?: string;
     /** CSS variables for theming */
@@ -54,6 +58,7 @@ export function embedSignDocument(options: EmbedSignDocumentOptions): EmbedSignD
         documentId,
         token,
         host = 'https://app.sajn.se',
+        language = 'en',
         className,
         cssVars,
         allowDocumentRejection,
@@ -77,6 +82,7 @@ export function embedSignDocument(options: EmbedSignDocumentOptions): EmbedSignD
     const encodedOptions = btoa(
         encodeURIComponent(
             JSON.stringify({
+                language,
                 cssVars,
                 allowDocumentRejection,
                 ...additionalProps,

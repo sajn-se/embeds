@@ -1,6 +1,6 @@
 {
     "name": "@sajn/embed",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "Embed sajn e-signature functionality in any web application",
     "homepage": "https://github.com/sajn-se/embeds#readme",
     "bugs": {
