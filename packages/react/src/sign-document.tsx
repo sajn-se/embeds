@@ -13,6 +13,7 @@ export type EmbedSignDocumentProps = {
 
     cssVars?: (CssVars & Record<string, string>) | undefined;
     allowDocumentRejection?: boolean | undefined;
+    showScrollIndicator?: boolean | undefined;
 
     additionalProps?: Record<string, string | number | boolean> | undefined;
     onDocumentReady?: () => void;
@@ -43,6 +44,7 @@ function EmbedSignDocument(props: EmbedSignDocumentProps) {
                     language: props.language ?? 'en',
                     cssVars: props.cssVars,
                     allowDocumentRejection: props.allowDocumentRejection,
+                    showScrollIndicator: props.showScrollIndicator ?? true,
                     ...props.additionalProps,
                 })
             )

@@ -33,6 +33,8 @@ export interface EmbedSignDocumentOptions {
     cssVars?: CssVars & Record<string, string>;
     /** Allow document rejection */
     allowDocumentRejection?: boolean;
+    /** Show scroll indicator button (default: true) */
+    showScrollIndicator?: boolean;
     /** Additional props to pass */
     additionalProps?: Record<string, string | number | boolean>;
     /** Called when iframe is ready */
@@ -62,6 +64,7 @@ export function embedSignDocument(options: EmbedSignDocumentOptions): EmbedSignD
         className,
         cssVars,
         allowDocumentRejection,
+        showScrollIndicator = true,
         additionalProps,
         onDocumentReady,
         onSignerCompleted,
@@ -85,6 +88,7 @@ export function embedSignDocument(options: EmbedSignDocumentOptions): EmbedSignD
                 language,
                 cssVars,
                 allowDocumentRejection,
+                showScrollIndicator,
                 ...additionalProps,
             })
         )

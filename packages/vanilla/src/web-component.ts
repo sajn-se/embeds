@@ -5,7 +5,7 @@ export class SajnSignDocument extends HTMLElement {
     private container: HTMLDivElement;
 
     static get observedAttributes() {
-        return ['document-id', 'token', 'host', 'language', 'class-name', 'allow-document-rejection'];
+        return ['document-id', 'token', 'host', 'language', 'class-name', 'allow-document-rejection', 'show-scroll-indicator'];
     }
 
     constructor() {
@@ -48,6 +48,7 @@ export class SajnSignDocument extends HTMLElement {
             language: (this.getAttribute('language') as 'sv' | 'en' | 'no' | 'da' | 'fi' | 'de' | 'is' | 'es' | 'fr' | 'it') || undefined,
             className: this.getAttribute('class-name') || undefined,
             allowDocumentRejection: this.hasAttribute('allow-document-rejection'),
+            showScrollIndicator: this.getAttribute('show-scroll-indicator') !== 'false',
             onDocumentReady: () => {
                 this.dispatchEvent(new CustomEvent('document-ready'));
             },

@@ -26,10 +26,12 @@ const props = withDefaults(defineProps<{
     class?: string;
     cssVars?: CssVars & Record<string, string>;
     allowDocumentRejection?: boolean;
+    showScrollIndicator?: boolean;
     additionalProps?: Record<string, string | number | boolean>;
 }>(), {
     host: 'https://app.sajn.se',
     language: 'en',
+    showScrollIndicator: true,
 });
 
 const emit = defineEmits<{
@@ -48,6 +50,7 @@ const src = computed(() => {
                 language: props.language,
                 cssVars: props.cssVars,
                 allowDocumentRejection: props.allowDocumentRejection,
+                showScrollIndicator: props.showScrollIndicator,
                 ...props.additionalProps,
             })
         )
