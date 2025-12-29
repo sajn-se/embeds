@@ -4,15 +4,15 @@ export type Language = 'sv' | 'en' | 'no' | 'da' | 'fi' | 'de' | 'is' | 'es' | '
 
 export interface SignerCompletedData {
     token: string;
-    documentId: number;
-    signerId: number;
+    documentId: string;
+    signerId: string;
     failed?: string;
 }
 
 export interface SignerRejectedData {
     token: string;
-    documentId: number;
-    signerId: number;
+    documentId: string;
+    signerId: string;
     reason: string;
 }
 

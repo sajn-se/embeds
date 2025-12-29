@@ -18,15 +18,15 @@ export type EmbedSignDocumentProps = {
     onDocumentReady?: () => void;
     onSignerCompleted?: (data: {
         token: string;
-        documentId: number;
-        signerId: number;
+        documentId: string;
+        signerId: string;
         failed?: string;
     }) => void;
     onDocumentError?: (data: { code: string; message: string }) => void;
     onSignerRejected?: (data: {
         token: string;
-        documentId: number;
-        signerId: number;
+        documentId: string;
+        signerId: string;
         reason: string;
     }) => void;
 };
