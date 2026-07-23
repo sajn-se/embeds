@@ -19,7 +19,6 @@
     "typescript": "~5.5.4"
   },
   "scripts": {
-    "build": "./scripts/build.sh",
-    "make:version": "npm version --workspaces --no-git-tag-version -m \"v%s\""
+    "build": "./scripts/build.sh"
   }
 }

@@ -6,7 +6,7 @@ Embed sajn's e-signature functionality directly into your applications.
 
 | Package | Install |
 |---------|---------|
-| Vanilla JS | `npm install @sajn/embed` |
+| Vanilla JS | `npm install @sajn/embed-js` |
 | React | `npm install @sajn/embed-react` |
 | Vue | `npm install @sajn/embed-vue` |
 
@@ -15,7 +15,7 @@ Embed sajn's e-signature functionality directly into your applications.
 ### Vanilla JS
 
 ```html
-<script src="https://unpkg.com/@sajn/embed"></script>
+<script src="https://unpkg.com/@sajn/embed-js"></script>
 <div id="signing"></div>
 <script>
   sajn.embedSignDocument({

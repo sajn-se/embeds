@@ -9,7 +9,7 @@ export default defineConfig({
             entry: './src/index.ts',
             name: '@sajn/embed-vue',
             formats: ['es', 'cjs'],
-            fileName: 'index',
+            fileName: (format) => (format === 'es' ? 'index.mjs' : 'index.js'),
         },
         rollupOptions: {
             external: ['vue'],
