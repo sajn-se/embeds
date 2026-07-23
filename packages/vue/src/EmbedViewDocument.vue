@@ -45,6 +45,12 @@ function handleMessage(event: MessageEvent) {
     if (iframeRef.value?.contentWindow === event.source) {
         switch (event.data.action) {
             case 'document-ready':
+                // Handshake: hand the iframe our verified origin so it can
+                // postMessage results back to us specifically (not '*').
+                iframeRef.value?.contentWindow?.postMessage(
+                    { action: 'embed-init' },
+                    new URL(props.host || 'https://app.sajn.se').origin
+                );
                 emit('documentReady');
                 break;
             case 'document-error':

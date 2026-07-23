@@ -84,6 +84,12 @@ export function embedViewDocument(options: EmbedViewDocumentOptions): EmbedViewD
         if (iframe.contentWindow === event.source) {
             switch (event.data.action) {
                 case 'document-ready':
+                    // Handshake: hand the iframe our verified origin so it can
+                    // postMessage results back to us specifically (not '*').
+                    iframe.contentWindow?.postMessage(
+                        { action: 'embed-init' },
+                        new URL(host).origin
+                    );
                     onDocumentReady?.();
                     break;
                 case 'document-error':

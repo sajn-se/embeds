@@ -44,6 +44,12 @@ function EmbedViewDocument(props: EmbedViewDocumentProps) {
             if (__iframe.current?.contentWindow === event.source) {
                 switch (event.data.action) {
                     case "document-ready":
+                        // Handshake: hand the iframe our verified origin so it can
+                        // postMessage results back to us specifically (not '*').
+                        __iframe.current?.contentWindow?.postMessage(
+                            { action: "embed-init" },
+                            new URL(props.host || "https://app.sajn.se").origin
+                        );
                         props.onDocumentReady?.();
                         break;
 
@@ -53,7 +59,7 @@ function EmbedViewDocument(props: EmbedViewDocumentProps) {
                 }
             }
         },
-        [props.onDocumentReady, props.onDocumentError]
+        [props.host, props.onDocumentReady, props.onDocumentError]
     );
 
     useEffect(() => {

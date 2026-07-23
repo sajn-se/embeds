@@ -7,8 +7,8 @@ MONOREPO_ROOT="$SCRIPT_DIR/.."
 
 cd "$MONOREPO_ROOT"
 
-echo "Building @sajn/embed..."
-pnpm --filter @sajn/embed run build
+echo "Building @sajn/embed-js..."
+pnpm --filter @sajn/embed-js run build
 
 echo "Building @sajn/embed-react..."
 pnpm --filter @sajn/embed-react run build
