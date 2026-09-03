@@ -4,6 +4,8 @@ import { useRef, useEffect, useCallback } from "react";
 
 export type Language = 'sv' | 'en' | 'no' | 'da' | 'fi' | 'de' | 'is' | 'es' | 'fr' | 'it';
 
+export type SignatureInputMode = 'draw' | 'type' | 'upload';
+
 export type EmbedSignDocumentProps = {
     language?: Language;
     className?: string;
@@ -14,6 +16,8 @@ export type EmbedSignDocumentProps = {
     cssVars?: (CssVars & Record<string, string>) | undefined;
     allowDocumentRejection?: boolean | undefined;
     showScrollIndicator?: boolean | undefined;
+    /** Which signature input modes the pad offers (default: all). Only narrows the workspace allowlist. */
+    signatureInputModes?: SignatureInputMode[] | undefined;
 
     additionalProps?: Record<string, string | number | boolean> | undefined;
     onDocumentReady?: () => void;
@@ -45,6 +49,7 @@ function EmbedSignDocument(props: EmbedSignDocumentProps) {
                     cssVars: props.cssVars,
                     allowDocumentRejection: props.allowDocumentRejection,
                     showScrollIndicator: props.showScrollIndicator ?? true,
+                    signatureInputModes: props.signatureInputModes,
                     ...props.additionalProps,
                 })
             )

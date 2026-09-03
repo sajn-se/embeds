@@ -7,6 +7,7 @@ export type {
     EmbedSignDocumentInstance,
     SignerCompletedData,
     SignerRejectedData,
+    SignatureInputMode,
     Language,
 } from './embed-sign-document';
 export type {

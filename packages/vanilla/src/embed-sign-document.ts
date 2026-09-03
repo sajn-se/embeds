@@ -2,6 +2,8 @@ import type { CssVars } from './css-vars';
 
 export type Language = 'sv' | 'en' | 'no' | 'da' | 'fi' | 'de' | 'is' | 'es' | 'fr' | 'it';
 
+export type SignatureInputMode = 'draw' | 'type' | 'upload';
+
 export interface SignerCompletedData {
     token: string;
     documentId: string;
@@ -35,6 +37,8 @@ export interface EmbedSignDocumentOptions {
     allowDocumentRejection?: boolean;
     /** Show scroll indicator button (default: true) */
     showScrollIndicator?: boolean;
+    /** Which signature input modes the pad offers (default: all). Only narrows the workspace allowlist — it cannot add a mode the workspace turned off. */
+    signatureInputModes?: SignatureInputMode[];
     /** Additional props to pass */
     additionalProps?: Record<string, string | number | boolean>;
     /** Called when iframe is ready */
@@ -65,6 +69,7 @@ export function embedSignDocument(options: EmbedSignDocumentOptions): EmbedSignD
         cssVars,
         allowDocumentRejection,
         showScrollIndicator = true,
+        signatureInputModes,
         additionalProps,
         onDocumentReady,
         onSignerCompleted,
@@ -89,6 +94,7 @@ export function embedSignDocument(options: EmbedSignDocumentOptions): EmbedSignD
                 cssVars,
                 allowDocumentRejection,
                 showScrollIndicator,
+                signatureInputModes,
                 ...additionalProps,
             })
         )

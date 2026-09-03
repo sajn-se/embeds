@@ -4,6 +4,8 @@ import type { CssVars } from './css-vars';
 
 export type Language = 'sv' | 'en' | 'no' | 'da' | 'fi' | 'de' | 'is' | 'es' | 'fr' | 'it';
 
+export type SignatureInputMode = 'draw' | 'type' | 'upload';
+
 export interface SignerCompletedData {
     token: string;
     documentId: string;
@@ -27,6 +29,7 @@ const props = withDefaults(defineProps<{
     cssVars?: CssVars & Record<string, string>;
     allowDocumentRejection?: boolean;
     showScrollIndicator?: boolean;
+    signatureInputModes?: SignatureInputMode[];
     additionalProps?: Record<string, string | number | boolean>;
 }>(), {
     host: 'https://app.sajn.se',
@@ -51,6 +54,7 @@ const src = computed(() => {
                 cssVars: props.cssVars,
                 allowDocumentRejection: props.allowDocumentRejection,
                 showScrollIndicator: props.showScrollIndicator,
+                signatureInputModes: props.signatureInputModes,
                 ...props.additionalProps,
             })
         )

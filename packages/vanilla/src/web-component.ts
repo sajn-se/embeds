@@ -1,11 +1,11 @@
-import { embedSignDocument, type EmbedSignDocumentInstance, type SignerCompletedData, type SignerRejectedData } from './embed-sign-document';
+import { embedSignDocument, type EmbedSignDocumentInstance, type SignatureInputMode, type SignerCompletedData, type SignerRejectedData } from './embed-sign-document';
 
 export class SajnSignDocument extends HTMLElement {
     private instance: EmbedSignDocumentInstance | null = null;
     private container: HTMLDivElement;
 
     static get observedAttributes() {
-        return ['document-id', 'token', 'host', 'language', 'class-name', 'allow-document-rejection', 'show-scroll-indicator'];
+        return ['document-id', 'token', 'host', 'language', 'class-name', 'allow-document-rejection', 'show-scroll-indicator', 'signature-input-modes'];
     }
 
     constructor() {
@@ -49,6 +49,10 @@ export class SajnSignDocument extends HTMLElement {
             className: this.getAttribute('class-name') || undefined,
             allowDocumentRejection: this.hasAttribute('allow-document-rejection'),
             showScrollIndicator: this.getAttribute('show-scroll-indicator') !== 'false',
+            signatureInputModes: this.getAttribute('signature-input-modes')
+                ?.split(',')
+                .map((mode) => mode.trim())
+                .filter(Boolean) as SignatureInputMode[] | undefined,
             onDocumentReady: () => {
                 this.dispatchEvent(new CustomEvent('document-ready'));
             },
