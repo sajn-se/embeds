@@ -6,6 +6,20 @@ export type Language = 'sv' | 'en' | 'no' | 'da' | 'fi' | 'de' | 'is' | 'es' | '
 
 export type SignatureInputMode = 'draw' | 'type' | 'upload';
 
+export type SignerCompletedData = {
+    token: string;
+    documentId: string;
+    signerId: string;
+    failed?: string;
+};
+
+export type SignerRejectedData = {
+    token: string;
+    documentId: string;
+    signerId: string;
+    reason: string;
+};
+
 export type EmbedSignDocumentProps = {
     language?: Language;
     className?: string;
@@ -21,19 +35,9 @@ export type EmbedSignDocumentProps = {
 
     additionalProps?: Record<string, string | number | boolean> | undefined;
     onDocumentReady?: () => void;
-    onSignerCompleted?: (data: {
-        token: string;
-        documentId: string;
-        signerId: string;
-        failed?: string;
-    }) => void;
+    onSignerCompleted?: (data: SignerCompletedData) => void;
     onDocumentError?: (data: { code: string; message: string }) => void;
-    onSignerRejected?: (data: {
-        token: string;
-        documentId: string;
-        signerId: string;
-        reason: string;
-    }) => void;
+    onSignerRejected?: (data: SignerRejectedData) => void;
 };
 
 import { CssVars } from "./css-vars";
