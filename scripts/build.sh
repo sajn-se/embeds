@@ -16,4 +16,7 @@ pnpm --filter @sajn/embed-react run build
 echo "Building @sajn/embed-vue..."
 pnpm --filter @sajn/embed-vue run build
 
+echo "Building @sajn/embed-react-native..."
+pnpm --filter @sajn/embed-react-native run build
+
 echo "Done!"

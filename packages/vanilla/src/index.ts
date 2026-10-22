@@ -1,25 +1,4 @@
-import { embedSignDocument } from './embed-sign-document';
-import { embedViewDocument } from './embed-view-document';
-export { embedSignDocument };
-export { embedViewDocument };
-export type {
-    EmbedSignDocumentOptions,
-    EmbedSignDocumentInstance,
-    SignerCompletedData,
-    SignerRejectedData,
-    SignatureInputMode,
-    Language,
-} from './embed-sign-document';
-export type {
-    EmbedViewDocumentOptions,
-    EmbedViewDocumentInstance,
-} from './embed-view-document';
-export type { CssVars } from './css-vars';
-export { SajnSignDocument } from './web-component';
-export { SajnViewDocument } from './web-component-view';
-
-// For UMD build - expose as global `sajn`
-export const sajn = {
-    embedSignDocument,
-    embedViewDocument,
-};
+export { createSigningEmbed, createViewingEmbed } from './signing-embed';
+export { SajnSigningEmbedElement, SajnViewingEmbedElement, defineSajnElements } from './web-component';
+export type { SigningEmbed, SigningEmbedCallbacks, SigningEmbedError, SigningEmbedOptions } from './signing-embed';
+export type { Appearance, EmbedErrorCode, EmbedIds, EmbedReady, EmbedState, Locale, PartyStatus } from './protocol';

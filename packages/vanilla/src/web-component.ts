@@ -1,23 +1,48 @@
-import { embedSignDocument, type EmbedSignDocumentInstance, type SignatureInputMode, type SignerCompletedData, type SignerRejectedData } from './embed-sign-document';
+import type { Appearance, Locale } from './protocol';
+import { createSigningEmbed, type SigningEmbed } from './signing-embed';
 
-export class SajnSignDocument extends HTMLElement {
-    private instance: EmbedSignDocumentInstance | null = null;
-    private container: HTMLDivElement;
+// The JS API's callbacks, as DOM events: `ready`, `signed`, `rejected`, `fields-submitted`, `fields-progress`, `fields-changed`, `verified`,
+// `state-change`, `resize`, `session-expired` and `embed-error`, each with the callback's argument in `detail`.
+// `embed-error`, not `error`: the DOM's own error event would be mistaken for it.
+const EVENTS = {
+    onReady: 'ready',
+    onSigned: 'signed',
+    onRejected: 'rejected',
+    onFieldsSubmitted: 'fields-submitted',
+    onFieldsProgress: 'fields-progress',
+    onFieldsChanged: 'fields-changed',
+    onVerified: 'verified',
+    onStateChange: 'state-change',
+    onResize: 'resize',
+    onSessionExpired: 'session-expired',
+    onError: 'embed-error',
+} as const;
 
-    static get observedAttributes() {
-        return ['document-id', 'token', 'host', 'language', 'class-name', 'allow-document-rejection', 'show-scroll-indicator', 'signature-input-modes'];
+const ATTRIBUTES = ['client-secret-url', 'host', 'locale', 'appearance', 'fallback-height', 'frame-title'] as const;
+
+// Server rendering imports this module too, where HTMLElement doesn't exist.
+const ElementBase = (typeof HTMLElement === 'undefined' ? class {} : HTMLElement) as typeof HTMLElement;
+
+const parseAppearance = (value: string | null): Appearance | undefined => {
+    if (!value) return undefined;
+    try {
+        return JSON.parse(value) as Appearance;
+    } catch {
+        return undefined;
     }
+};
 
-    constructor() {
-        super();
-        this.container = document.createElement('div');
-        this.container.style.width = '100%';
-        this.container.style.height = '100%';
-    }
+class SajnEmbedElement extends ElementBase {
+    static observedAttributes = [...ATTRIBUTES];
+
+    /** Set this, or the `client-secret-url` attribute, to give the element its client secrets. */
+    fetchClientSecret?: () => Promise<string>;
+
+    protected defaultTitle = 'Signera dokument';
+    private instance: SigningEmbed | null = null;
 
     connectedCallback() {
-        this.appendChild(this.container);
-        this.initEmbed();
+        this.mount();
     }
 
     disconnectedCallback() {
@@ -25,58 +50,63 @@ export class SajnSignDocument extends HTMLElement {
         this.instance = null;
     }
 
-    attributeChangedCallback() {
-        if (this.isConnected) {
-            this.instance?.destroy();
-            this.initEmbed();
-        }
-    }
+    attributeChangedCallback(name: string) {
+        if (!this.instance) return;
 
-    private initEmbed() {
-        const documentId = this.getAttribute('document-id');
-        const token = this.getAttribute('token');
-
-        if (!documentId || !token) {
+        // Appearance and locale change live; anything else needs a new session.
+        if (name === 'appearance' || name === 'locale') {
+            this.instance.update({ appearance: parseAppearance(this.getAttribute('appearance')), locale: (this.getAttribute('locale') as Locale) || undefined });
             return;
         }
 
-        this.instance = embedSignDocument({
-            element: this.container,
-            documentId,
-            token,
-            host: this.getAttribute('host') || undefined,
-            language: (this.getAttribute('language') as 'sv' | 'en' | 'no' | 'da' | 'fi' | 'de' | 'is' | 'es' | 'fr' | 'it') || undefined,
-            className: this.getAttribute('class-name') || undefined,
-            allowDocumentRejection: this.hasAttribute('allow-document-rejection'),
-            showScrollIndicator: this.getAttribute('show-scroll-indicator') !== 'false',
-            signatureInputModes: this.getAttribute('signature-input-modes')
-                ?.split(',')
-                .map((mode) => mode.trim())
-                .filter(Boolean) as SignatureInputMode[] | undefined,
-            onDocumentReady: () => {
-                this.dispatchEvent(new CustomEvent('document-ready'));
-            },
-            onSignerCompleted: (data: SignerCompletedData) => {
-                this.dispatchEvent(new CustomEvent('signer-completed', { detail: data }));
-            },
-            onDocumentError: (data: { code: string; message: string }) => {
-                this.dispatchEvent(new CustomEvent('document-error', { detail: data }));
-            },
-            onSignerRejected: (data: SignerRejectedData) => {
-                this.dispatchEvent(new CustomEvent('signer-rejected', { detail: data }));
-            },
-        });
+        this.instance.destroy();
+        this.mount();
+    }
 
-        // Style the iframe to fill the container
-        if (this.instance.iframe) {
-            this.instance.iframe.style.width = '100%';
-            this.instance.iframe.style.height = '100%';
-            this.instance.iframe.style.border = 'none';
-        }
+    private readonly fetchFromUrl = async () => {
+        const url = this.getAttribute('client-secret-url');
+        if (!url) throw new Error('Set client-secret-url or the fetchClientSecret property on the element');
+
+        const response = await fetch(url, { method: 'POST', credentials: 'same-origin' });
+        const json = (await response.json()) as { clientSecret?: string };
+        if (!response.ok || !json.clientSecret) throw new Error(`${url} returned no clientSecret`);
+        return json.clientSecret;
+    };
+
+    private mount() {
+        if (!this.isConnected) return;
+        if (!this.style.display) this.style.display = 'block';
+
+        const callbacks = Object.fromEntries(
+            Object.entries(EVENTS).map(([callback, event]) => [callback, (detail?: unknown) => this.dispatchEvent(new CustomEvent(event, { detail }))]),
+        );
+
+        this.instance = createSigningEmbed({
+            ...callbacks,
+            container: this,
+            host: this.getAttribute('host') || undefined,
+            locale: (this.getAttribute('locale') as Locale) || undefined,
+            appearance: parseAppearance(this.getAttribute('appearance')),
+            fallbackHeight: this.getAttribute('fallback-height') || undefined,
+            title: this.getAttribute('frame-title') || this.defaultTitle,
+            fetchClientSecret: () => (this.fetchClientSecret ?? this.fetchFromUrl)(),
+        });
     }
 }
 
-// Auto-register if customElements is available
-if (typeof customElements !== 'undefined') {
-    customElements.define('sajn-sign-document', SajnSignDocument);
+/** `<sajn-signing-embed client-secret-url="/api/sajn-session">` */
+export class SajnSigningEmbedElement extends SajnEmbedElement {}
+
+/** `<sajn-viewing-embed client-secret-url="/api/sajn-session">`, for a `viewing` session. */
+export class SajnViewingEmbedElement extends SajnEmbedElement {
+    protected defaultTitle = 'Visa dokument';
 }
+
+export const defineSajnElements = () => {
+    if (typeof customElements === 'undefined') return;
+    if (!customElements.get('sajn-signing-embed')) customElements.define('sajn-signing-embed', SajnSigningEmbedElement);
+    if (!customElements.get('sajn-viewing-embed')) customElements.define('sajn-viewing-embed', SajnViewingEmbedElement);
+};
+
+// A plain <script> tag gets the elements without calling anything.
+defineSajnElements();

@@ -1,0 +1,77 @@
+'use client';
+
+import { useEffect, useRef, type CSSProperties } from 'react';
+
+import { createSigningEmbed, type Appearance, type Locale, type SigningEmbed as SigningEmbedInstance, type SigningEmbedCallbacks } from '@sajn/embed-js';
+
+export type SigningEmbedProps = SigningEmbedCallbacks & {
+    fetchClientSecret: () => Promise<string>;
+    host?: string;
+    appearance?: Appearance;
+    locale?: Locale;
+    title?: string;
+    fallbackHeight?: string;
+    /** Opens the eID pages and the BankID app link yourself, where the frame can't open a window. */
+    openUrl?: (url: string) => void;
+    className?: string;
+    style?: CSSProperties;
+};
+
+export const SigningEmbed = ({ fetchClientSecret, host, appearance, locale, title, fallbackHeight, openUrl, className, style, ...callbacks }: SigningEmbedProps) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const instanceRef = useRef<SigningEmbedInstance | null>(null);
+
+    // Read through refs, so a new inline callback each render never remounts the frame or fires a stale closure.
+    const latest = useRef({ fetchClientSecret, callbacks, openUrl });
+    latest.current = { fetchClientSecret, callbacks, openUrl };
+    const hasOpenUrl = !!openUrl;
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const forward = <K extends keyof SigningEmbedCallbacks>(key: K) =>
+            ((...args: unknown[]) => (latest.current.callbacks[key] as ((...a: unknown[]) => void) | undefined)?.(...args)) as NonNullable<SigningEmbedCallbacks[K]>;
+
+        const instance = createSigningEmbed({
+            container,
+            host,
+            title,
+            fallbackHeight,
+            appearance,
+            locale,
+            fetchClientSecret: () => latest.current.fetchClientSecret(),
+            openUrl: hasOpenUrl ? (url) => latest.current.openUrl?.(url) : undefined,
+            onReady: forward('onReady'),
+            onSigned: forward('onSigned'),
+            onRejected: forward('onRejected'),
+            onFieldsSubmitted: forward('onFieldsSubmitted'),
+            onFieldsProgress: forward('onFieldsProgress'),
+            onFieldsChanged: forward('onFieldsChanged'),
+            onVerified: forward('onVerified'),
+            onStateChange: forward('onStateChange'),
+            onResize: forward('onResize'),
+            onSessionExpired: forward('onSessionExpired'),
+            onError: forward('onError'),
+        });
+
+        instanceRef.current = instance;
+        return () => {
+            instance.destroy();
+            instanceRef.current = null;
+        };
+        // Appearance and locale change through update() below; only these remount the frame.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [host, title, fallbackHeight, hasOpenUrl]);
+
+    const appearanceKey = JSON.stringify(appearance ?? null);
+    useEffect(() => {
+        instanceRef.current?.update({ appearance, locale });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [appearanceKey, locale]);
+
+    return <div ref={containerRef} className={className} style={style} />;
+};
+
+// The session decides what the frame shows; this name reads right for a `viewing` session.
+export const ViewingEmbed = (props: SigningEmbedProps) => <SigningEmbed title="Visa dokument" {...props} />;
