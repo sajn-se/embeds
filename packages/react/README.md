@@ -1,30 +1,49 @@
 # @sajn/embed-react
 
-React component for embedding sajn's e-signature functionality directly into your applications.
+Show the sajn signing page in a React app. Your server creates an embed session through the sajn API, and `<SigningEmbed>` shows the signing page in an iframe. Works with React 18 and 19.
 
-## Installation
+> **Beta.** 1.0 is in beta and published under the `beta` tag on npm. It can change in ways that break your integration before the first stable release, estimated for November 2026. Pin the exact version. For production, 0.x (embedding v1) is stable.
+
+## Install
 
 ```bash
-npm install @sajn/embed-react
+npm install @sajn/embed-react@1.0.0-beta.1
 ```
 
-## Quick Start
+## Use
+
+Your server calls `POST /api/v1/embed-sessions` and returns the `clientSecret`. In your app:
 
 ```tsx
-import { EmbedSignDocument } from '@sajn/embed-react';
+"use client";
 
-function App() {
-  return (
-    <EmbedSignDocument
-      documentId="your-document-id"
-      token="your-token"
-      onSignerCompleted={(data) => console.log('Signed!', data)}
-      onSignerRejected={(data) => console.log('Rejected', data)}
-    />
-  );
-}
+import { SigningEmbed } from "@sajn/embed-react";
+
+const fetchClientSecret = async () => {
+  const response = await fetch("/api/sajn/embed-session", { method: "POST" });
+  if (!response.ok) throw new Error("Signing isn't available right now.");
+  return (await response.json()).clientSecret;
+};
+
+export const SigningPage = () => (
+  <SigningEmbed
+    fetchClientSecret={fetchClientSecret}
+    appearance={{ colors: { primary: "#0f766e" } }}
+    style={{ height: "80vh" }}
+    onSigned={({ documentId }) => console.log("Signed", documentId)}
+    onError={({ code, message }) => console.error(code, message)}
+  />
+);
 ```
+
+The component calls `fetchClientSecret` again each time a session ends, so your endpoint must create a new session on every call. `className` and `style` apply to the container, so give it a height there.
+
+## Props
+
+`fetchClientSecret` (required), `host`, `appearance`, `locale`, `title`, `fallbackHeight`, `className`, and `style`, plus the callbacks `onReady`, `onSigned`, `onRejected`, `onFieldsSubmitted`, `onVerified`, `onStateChange`, `onResize`, `onSessionExpired`, and `onError`.
+
+A change to `appearance` or `locale` updates the open frame. A change to `host`, `title`, or `fallbackHeight` mounts a new frame with a new session. Callbacks are read from the latest render, so inline functions never reload the frame.
 
 ## Documentation
 
-For full documentation, events, and configuration options, see the [main README](https://github.com/sajn-se/embeds#readme).
+[Embed signing with React](https://docs.sajn.se/guides/embedding-v2/react) has the server step, a Next.js example, the events, the appearance options, the error codes, and troubleshooting.

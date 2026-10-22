@@ -9,10 +9,10 @@ export default defineConfig({
             entry: './src/index.ts',
             name: '@sajn/embed-vue',
             formats: ['es', 'cjs'],
-            fileName: (format) => (format === 'es' ? 'index.mjs' : 'index.js'),
+            fileName: (format) => (format === 'es' ? 'index.mjs' : 'index.cjs'),
         },
         rollupOptions: {
-            external: ['vue'],
+            external: ['vue', '@sajn/embed-js'],
             output: {
                 globals: {
                     vue: 'Vue',
@@ -24,8 +24,10 @@ export default defineConfig({
         vue(),
         dts({
             include: ['src'],
+            // One declaration file, written to package.json `types`: node16 ESM can't resolve a per-file emit's extensionless imports.
+            rollupTypes: true,
             afterBuild() {
-                copyFileSync('dist/index.d.ts', 'dist/index.d.mts');
+                copyFileSync('dist/index.d.cts', 'dist/index.d.mts');
             },
         }),
     ],

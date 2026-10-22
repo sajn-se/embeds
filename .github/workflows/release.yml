@@ -1,0 +1,38 @@
+name: Release
+
+# Push a tag like v1.0.1 after bumping all four package versions to match it.
+# A prerelease version, such as 1.0.0-beta.1, publishes under the `beta` tag, so `latest` doesn't move.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      # React Native's tests import the built UMD bundle, so build first.
+      - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm test
+      - name: Check the tag matches every package version
+        run: |
+          for pkg in packages/*/package.json; do
+            version=$(node -p "require('./$pkg').version")
+            test "v$version" = "$GITHUB_REF_NAME" || { echo "$pkg is $version, tag is $GITHUB_REF_NAME"; exit 1; }
+          done
+      - run: pnpm -r --filter "./packages/*" publish --access public --no-git-checks --tag ${{ contains(github.ref_name, '-') && 'beta' || 'latest' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
