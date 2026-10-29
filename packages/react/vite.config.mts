@@ -19,6 +19,7 @@ export default defineConfig({
         react(),
         dts({
             include: ['src'],
+            exclude: ['src/**/*.test.tsx'],
             // One declaration file, written to package.json `types`: node16 ESM can't resolve a per-file emit's extensionless imports.
             rollupTypes: true,
             afterBuild() {

@@ -2,6 +2,25 @@
 
 All four packages, `@sajn/embed-js`, `@sajn/embed-react`, `@sajn/embed-vue`, and `@sajn/embed-react-native`, share one version.
 
+## 1.0.0-beta.2
+
+1.0 is still in beta and published under the `beta` tag on npm. 0.x stays on `latest` and is the stable embed.
+
+### Breaking changes
+
+- `appearance.signIntro` and `appearance.labels` are removed. The heading, the attestation, the instruction, and the sign button's wording are the same as on the sajn signing page, and a host can't change them. The frame ignores both keys, so a host that still sends them keeps working, but the types no longer accept them.
+- `EmbedReady.loadMs` is always present. Every v2 frame sends it.
+
+### Added
+
+- `bootstrapTimeoutMs` and `openUrl` props in `@sajn/embed-react` and `@sajn/embed-vue`.
+- `requestState()` in `@sajn/embed-react`, through a ref typed `SigningEmbedHandle`, and in `@sajn/embed-vue`, through a template ref.
+- `EmbedReady` is exported from `@sajn/embed-react` and `@sajn/embed-vue`.
+
+### Fixed
+
+- `bootstrap_timeout` also fires when `fetchClientSecret` doesn't resolve, and when the frame doesn't load. Before, the timer started at the frame's `load` event.
+
 ## 1.0.0-beta.1
 
 1.0 is in beta and published under the `beta` tag on npm, so `latest` stays on 0.x. It can change in ways that break your integration before the first stable release, estimated for November 2026.

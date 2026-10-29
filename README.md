@@ -10,10 +10,10 @@ Full guide: [Embedded signing](https://docs.sajn.se/guides/embedding-v2/overview
 
 | Package | Version | For |
 |---------|---------|-----|
-| [`@sajn/embed-js`](packages/vanilla) | 1.0.0-beta.1 | Any web page. Exports `createSigningEmbed`. |
-| [`@sajn/embed-react`](packages/react) | 1.0.0-beta.1 | React 18 and 19. Exports `<SigningEmbed>`. |
-| [`@sajn/embed-vue`](packages/vue) | 1.0.0-beta.1 | Vue 3.3 and later. Exports `<SigningEmbed>`. |
-| [`@sajn/embed-react-native`](packages/react-native) | 1.0.0-beta.1 | React Native apps on iOS and Android. Exports `<SigningEmbed>`. |
+| [`@sajn/embed-js`](packages/vanilla) | 1.0.0-beta.2 | Any web page. Exports `createSigningEmbed`. |
+| [`@sajn/embed-react`](packages/react) | 1.0.0-beta.2 | React 18 and 19. Exports `<SigningEmbed>`. |
+| [`@sajn/embed-vue`](packages/vue) | 1.0.0-beta.2 | Vue 3.3 and later. Exports `<SigningEmbed>`. |
+| [`@sajn/embed-react-native`](packages/react-native) | 1.0.0-beta.2 | React Native apps on iOS and Android. Exports `<SigningEmbed>`. |
 
 The React and Vue packages wrap `@sajn/embed-js`.
 
@@ -113,7 +113,7 @@ import { SigningEmbed } from "@sajn/embed-vue";
 Always pin the version:
 
 ```html
-<script src="https://unpkg.com/@sajn/embed-js@1.0.0-beta.1/dist/index.umd.js"></script>
+<script src="https://unpkg.com/@sajn/embed-js@1.0.0-beta.2/dist/index.umd.js"></script>
 <script>
   sajn.createSigningEmbed({ container: document.getElementById("signing"), fetchClientSecret });
 </script>

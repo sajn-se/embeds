@@ -5,7 +5,7 @@ Embed sajn e-signing in an iOS or Android app. The package runs the signing page
 > **Beta.** 1.0 is in beta and published under the `beta` tag on npm. It can change in ways that break your integration before the first stable release, estimated for November 2026. Pin the exact version. For production, 0.x (embedding v1) is stable.
 
 ```bash
-npm install @sajn/embed-react-native@1.0.0-beta.1 react-native-webview
+npm install @sajn/embed-react-native@1.0.0-beta.2 react-native-webview
 ```
 
 ```tsx

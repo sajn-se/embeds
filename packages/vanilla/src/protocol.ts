@@ -21,20 +21,15 @@ export type Appearance = {
     colorScheme?: 'light' | 'dark' | 'system';
     /** `inline` grows the frame to fit its content. `fixed` scrolls inside the frame and fills the container. */
     mode?: 'inline' | 'fixed';
-    /** Show the heading, the attestation and the instruction above the signature pad. Defaults to true. */
-    signIntro?: boolean;
     /** Show the bar with the document name. Defaults to true. Without it, the menu for download, delegation and rejection sits in the top corner. */
     header?: boolean;
     /** Show a hint to scroll down until the sign section is in view. Defaults to true. Only in `fixed` mode. */
     scrollIndicator?: boolean;
     /** Show the document ID under the sign button. Defaults to true. */
     documentId?: boolean;
-    labels?: {
-        /** Replaces the text on the sign button, up to 64 characters. */
-        signButton?: string;
-    };
 };
 
+// The app's EMBED_ERROR_CODES, plus `client_secret_failed`, which only the SDK raises.
 export type EmbedErrorCode =
     | 'session_not_found'
     | 'session_expired'
@@ -62,8 +57,8 @@ export type EmbedState = {
 
 export type EmbedIds = { documentId: string; partyId: string; externalId: string | null };
 
-/** `loadMs`: from the frame's navigation to its first painted page. Frames older than protocol 2.1 leave it out. */
-export type EmbedReady = EmbedIds & { loadMs?: number };
+/** `loadMs`: from the frame's navigation to its first painted page. */
+export type EmbedReady = EmbedIds & { loadMs: number };
 
 export type EmbedEvent =
     | { type: 'embed.hello'; data: { protocol: string } }

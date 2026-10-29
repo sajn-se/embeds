@@ -10,6 +10,8 @@ const props = defineProps<{
     locale?: Locale;
     title?: string;
     fallbackHeight?: string;
+    /** How long to wait for a client secret, and then for the frame, before `bootstrap_timeout`. Defaults to 10000. */
+    bootstrapTimeoutMs?: number;
     /** Opens the eID pages and the BankID app link yourself, where the frame can't open a window. */
     openUrl?: (url: string) => void;
 }>();
@@ -39,6 +41,7 @@ onMounted(() => {
         host: props.host,
         title: props.title,
         fallbackHeight: props.fallbackHeight,
+        bootstrapTimeoutMs: props.bootstrapTimeoutMs,
         appearance: props.appearance,
         locale: props.locale,
         fetchClientSecret: () => props.fetchClientSecret(),
@@ -64,6 +67,11 @@ watch(() => [props.appearance, props.locale] as const, ([appearance, locale]) =>
 onBeforeUnmount(() => {
     instance?.destroy();
     instance = null;
+});
+
+defineExpose({
+    /** Ask the frame for a fresh state, which arrives in `stateChange`. */
+    requestState: () => instance?.requestState(),
 });
 </script>
 
