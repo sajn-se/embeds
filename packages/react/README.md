@@ -7,7 +7,7 @@ Show the sajn signing page in a React app. Your server creates an embed session 
 ## Install
 
 ```bash
-npm install @sajn/embed-react@1.0.0-beta.1
+npm install @sajn/embed-react@1.0.0-beta.2
 ```
 
 ## Use
@@ -40,9 +40,13 @@ The component calls `fetchClientSecret` again each time a session ends, so your 
 
 ## Props
 
-`fetchClientSecret` (required), `host`, `appearance`, `locale`, `title`, `fallbackHeight`, `className`, and `style`, plus the callbacks `onReady`, `onSigned`, `onRejected`, `onFieldsSubmitted`, `onVerified`, `onStateChange`, `onResize`, `onSessionExpired`, and `onError`.
+`fetchClientSecret` (required), `host`, `appearance`, `locale`, `title`, `fallbackHeight`, `bootstrapTimeoutMs`, `openUrl`, `className`, and `style`, plus the callbacks `onReady`, `onSigned`, `onRejected`, `onFieldsSubmitted`, `onFieldsProgress`, `onFieldsChanged`, `onVerified`, `onStateChange`, `onResize`, `onSessionExpired`, and `onError`.
 
-A change to `appearance` or `locale` updates the open frame. A change to `host`, `title`, or `fallbackHeight` mounts a new frame with a new session. Callbacks are read from the latest render, so inline functions never reload the frame.
+A change to `appearance` or `locale` updates the open frame. A change to `host`, `title`, `fallbackHeight`, or `bootstrapTimeoutMs`, or adding or removing `openUrl`, mounts a new frame with a new session. Callbacks are read from the latest render, so inline functions never reload the frame.
+
+## Ref
+
+Pass a `ref` typed `SigningEmbedHandle` to call `requestState()`, which asks the frame for a new state. The state arrives in `onStateChange`.
 
 ## Documentation
 

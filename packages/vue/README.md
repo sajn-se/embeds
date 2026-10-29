@@ -7,7 +7,7 @@ Show the sajn signing page in a Vue app. Your server creates an embed session th
 ## Install
 
 ```bash
-npm install @sajn/embed-vue@1.0.0-beta.1
+npm install @sajn/embed-vue@1.0.0-beta.2
 ```
 
 ## Use
@@ -44,11 +44,13 @@ The component calls `fetchClientSecret` again each time a session ends, so your 
 
 ## Props and events
 
-Props: `fetch-client-secret` (required), `host`, `appearance`, `locale`, `title`, and `fallback-height`.
+Props: `fetch-client-secret` (required), `host`, `appearance`, `locale`, `title`, `fallback-height`, `bootstrap-timeout-ms`, and `open-url`.
 
-Events: `@ready`, `@signed`, `@rejected`, `@fields-submitted`, `@verified`, `@state-change`, `@resize`, `@session-expired`, and `@error`.
+Events: `@ready`, `@signed`, `@rejected`, `@fields-submitted`, `@fields-progress`, `@fields-changed`, `@verified`, `@state-change`, `@resize`, `@session-expired`, and `@error`.
 
-A change to `appearance` or `locale` updates the open frame. `host`, `title`, and `fallback-height` are read when the component mounts. To apply a change to one of them, change the component's `key`.
+A change to `appearance` or `locale` updates the open frame. `host`, `title`, `fallback-height`, `bootstrap-timeout-ms`, and `open-url` are read when the component mounts. To apply a change to one of them, change the component's `key`.
+
+The component exposes `requestState()` through a template ref. It asks the frame for a new state, which arrives in `@state-change`.
 
 ## Documentation
 

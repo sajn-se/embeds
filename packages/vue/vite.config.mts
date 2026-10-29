@@ -24,6 +24,7 @@ export default defineConfig({
         vue(),
         dts({
             include: ['src'],
+            exclude: ['src/**/*.test.ts'],
             // One declaration file, written to package.json `types`: node16 ESM can't resolve a per-file emit's extensionless imports.
             rollupTypes: true,
             afterBuild() {

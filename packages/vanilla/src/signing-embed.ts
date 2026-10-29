@@ -19,6 +19,7 @@ const INIT_INTERVAL_MS = 500;
 const DEFAULT_BOOTSTRAP_TIMEOUT_MS = 10_000;
 // A session that keeps expiring right after it starts points at a broken backend; stop rather than loop.
 const MAX_RESTARTS_PER_MINUTE = 3;
+const FRAME_TIMEOUT_MESSAGE = 'The sajn frame did not answer. Check the session origins and your organization\'s embed domains.';
 
 export type SigningEmbedError = { code: EmbedErrorCode; message: string };
 
@@ -103,6 +104,14 @@ export const createSigningEmbed = (options: SigningEmbedOptions): SigningEmbed =
         timeoutTimer = null;
     };
 
+    const armTimeout = (message: string) => {
+        if (timeoutTimer) clearTimeout(timeoutTimer);
+        timeoutTimer = setTimeout(() => {
+            stopBootstrap();
+            if (!isConnected) fail({ code: 'bootstrap_timeout', message });
+        }, bootstrapTimeoutMs);
+    };
+
     const isInline = () => appearance?.mode === 'inline';
 
     const sizeFrame = () => {
@@ -184,9 +193,13 @@ export const createSigningEmbed = (options: SigningEmbedOptions): SigningEmbed =
     const mount = async () => {
         let clientSecret: string;
 
+        isConnected = false;
+        armTimeout('fetchClientSecret did not return a client secret.');
+
         try {
             clientSecret = await options.fetchClientSecret();
         } catch (error) {
+            stopBootstrap();
             fail({ code: 'client_secret_failed', message: error instanceof Error ? error.message : String(error) });
             return;
         }
@@ -195,13 +208,13 @@ export const createSigningEmbed = (options: SigningEmbedOptions): SigningEmbed =
 
         const id = sessionIdFromSecret(clientSecret);
         if (!id) {
+            stopBootstrap();
             fail({ code: 'client_secret_failed', message: 'fetchClientSecret returned something that is not an embed session client secret' });
             return;
         }
 
         sessionId = id;
         lastSeq = 0;
-        isConnected = false;
 
         const frame = document.createElement('iframe');
         frame.src = new URL(`/embed/v2/${id}`, host).toString();
@@ -227,12 +240,10 @@ export const createSigningEmbed = (options: SigningEmbedOptions): SigningEmbed =
             stopBootstrap();
             sendInit();
             initTimer = setInterval(sendInit, INIT_INTERVAL_MS);
-            timeoutTimer = setTimeout(() => {
-                stopBootstrap();
-                if (!isConnected) fail({ code: 'bootstrap_timeout', message: 'The sajn frame did not answer. Check the session origins and your organization\'s embed domains.' });
-            }, bootstrapTimeoutMs);
+            armTimeout(FRAME_TIMEOUT_MESSAGE);
         });
 
+        armTimeout(FRAME_TIMEOUT_MESSAGE);
         iframe?.remove();
         iframe = frame;
         sizeFrame();

@@ -143,6 +143,16 @@ describe('createSigningEmbed', () => {
         expect(onError).toHaveBeenCalledWith(expect.objectContaining({ code: 'bootstrap_timeout' }));
     });
 
+    it('reports a fetchClientSecret that never resolves', async () => {
+        const onError = vi.fn();
+        await mount({ onError, bootstrapTimeoutMs: 1000, fetchClientSecret: () => new Promise<string>(() => {}) });
+
+        vi.advanceTimersByTime(1100);
+
+        expect(onError).toHaveBeenCalledWith(expect.objectContaining({ code: 'bootstrap_timeout' }));
+        expect(container.querySelector('iframe')).toBeNull();
+    });
+
     it('rejects a backend that returns something other than a client secret', async () => {
         const onError = vi.fn();
         await mount({ onError, fetchClientSecret: async () => 'sk_live_not_a_secret' });

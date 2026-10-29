@@ -7,13 +7,13 @@ Show the sajn signing page in any web page. Your server creates an embed session
 ## Install
 
 ```bash
-npm install @sajn/embed-js@1.0.0-beta.1
+npm install @sajn/embed-js@1.0.0-beta.2
 ```
 
 Or load the UMD bundle, which exposes the `sajn` global. Always pin the version:
 
 ```html
-<script src="https://unpkg.com/@sajn/embed-js@1.0.0-beta.1/dist/index.umd.js"></script>
+<script src="https://unpkg.com/@sajn/embed-js@1.0.0-beta.2/dist/index.umd.js"></script>
 ```
 
 ## Use
@@ -50,9 +50,10 @@ The SDK calls `fetchClientSecret` again each time a session ends, so your endpoi
 | `locale` | The session's locale | `sv`, `en`, `no`, `da`, `fi`, `de`, `is`, `es`, `fr`, or `it`. |
 | `title` | `Signera dokument` | The frame's accessible name. |
 | `fallbackHeight` | `600px` | The frame's height in `fixed` mode when the container has no height. |
-| `bootstrapTimeoutMs` | `10000` | How long to wait for the frame before `bootstrap_timeout`. |
+| `bootstrapTimeoutMs` | `10000` | How long to wait for `fetchClientSecret`, and then for the frame, before `bootstrap_timeout`. |
+| `openUrl` | None | Opens the eID pages and the BankID app link yourself, where the frame can't open a window. |
 
-Callbacks: `onReady`, `onSigned`, `onRejected`, `onFieldsSubmitted`, `onVerified`, `onStateChange`, `onResize`, `onSessionExpired`, and `onError`.
+Callbacks: `onReady`, `onSigned`, `onRejected`, `onFieldsSubmitted`, `onFieldsProgress`, `onFieldsChanged`, `onVerified`, `onStateChange`, `onResize`, `onSessionExpired`, and `onError`.
 
 ## Methods
 
